@@ -11,7 +11,11 @@ import { flow, pick, noop } from 'lodash';
  */
 import { createElement, Component } from '@wordpress/element';
 import { EditableProvider } from '@wordpress/blocks';
-import { APIProvider, PopoverProvider, DropZoneProvider } from '@wordpress/components';
+import {
+	APIProvider,
+	DropZoneProvider,
+	SlotFillProvider as WPSlotFillProvider,
+} from '@wordpress/components';
 
 /**
  * Internal Dependencies
@@ -96,12 +100,13 @@ class EditorProvider extends Component {
 				}, this.store.dispatch ),
 			],
 
-			// Popover provider:
+			// Slot / Fill provider:
 			//
-			//  - context.popoverTarget
+			//  - context.getSlot
+			//  - context.registerSlot
+			//  - context.unregisterSlot
 			[
-				PopoverProvider,
-				{ target: this.target },
+				WPSlotFillProvider,
 			],
 
 			// APIProvider

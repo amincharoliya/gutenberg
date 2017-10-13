@@ -1,7 +1,7 @@
 /**
  * External dependencies
  */
-import { noop } from 'lodash';
+import { pick, without, noop } from 'lodash';
 
 /**
  * WordPress dependencies
@@ -13,32 +13,59 @@ class SlotFillProvider extends Component {
 		super( ...arguments );
 
 		this.registerSlot = this.registerSlot.bind( this );
+		this.registerFill = this.registerFill.bind( this );
 		this.unregisterSlot = this.unregisterSlot.bind( this );
+		this.unregisterFill = this.unregisterFill.bind( this );
 		this.getSlot = this.getSlot.bind( this );
 
 		this.slots = {};
+		this.fills = {};
 	}
 
 	getChildContext() {
-		const { registerSlot, unregisterSlot, getSlot } = this;
-
-		return {
-			registerSlot,
-			unregisterSlot,
-			getSlot,
-		};
+		return pick( this, [
+			'registerSlot',
+			'registerFill',
+			'unregisterSlot',
+			'unregisterFill',
+			'getSlot',
+		] );
 	}
 
 	registerSlot( name, node ) {
 		this.slots[ name ] = node;
+
+		this.forceUpdateFills( name );
+	}
+
+	registerFill( name, instance ) {
+		this.fills[ name ] = [
+			...( this.fills[ name ] || [] ),
+			instance,
+		];
 	}
 
 	unregisterSlot( name ) {
 		delete this.slots[ name ];
 	}
 
+	unregisterFill( name, instance ) {
+		this.fills[ name ] = without(
+			this.fills[ name ],
+			instance
+		);
+	}
+
 	getSlot( name ) {
 		return this.slots[ name ];
+	}
+
+	forceUpdateFills( name ) {
+		if ( this.fills.hasOwnProperty( name ) ) {
+			this.fills[ name ].forEach( ( instance ) => {
+				instance.forceUpdate();
+			} );
+		}
 	}
 
 	render() {
@@ -49,6 +76,8 @@ class SlotFillProvider extends Component {
 SlotFillProvider.childContextTypes = {
 	registerSlot: noop,
 	unregisterSlot: noop,
+	registerFill: noop,
+	unregisterFill: noop,
 	getSlot: noop,
 };
 

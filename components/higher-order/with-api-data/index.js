@@ -184,8 +184,6 @@ export default ( mapPropsToData ) => ( WrappedComponent ) => {
 
 					// Track path for future map skipping
 					result[ propName ].path = path;
-
-					return result[ propName ];
 				} );
 
 				return result;

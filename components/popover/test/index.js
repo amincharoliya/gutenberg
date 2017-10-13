@@ -8,8 +8,6 @@ import { shallow, mount } from 'enzyme';
  */
 import { Popover } from '../';
 
-jest.mock( '../../slot-fill/fill' );
-
 describe( 'Popover', () => {
 	describe( '#componentDidUpdate()', () => {
 		let wrapper, mocks;

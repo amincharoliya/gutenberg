@@ -8,8 +8,6 @@ import { mount } from 'enzyme';
  */
 import Dropdown from '../';
 
-jest.mock( '../../slot-fill/fill' );
-
 describe( 'Dropdown', () => {
 	it( 'should toggle the dropdown properly', () => {
 		const wrapper = mount( <Dropdown

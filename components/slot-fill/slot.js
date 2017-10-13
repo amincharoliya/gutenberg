@@ -16,20 +16,29 @@ class Slot extends Component {
 	}
 
 	componentWillUnmount() {
-		this.context.unregisterSlot( this.props.name, this.node );
+		const { unregisterSlot = noop } = this.context;
+
+		unregisterSlot( this.props.name, this.node );
 	}
 
 	componentWillReceiveProps( nextProps ) {
 		const { name } = nextProps;
+		const {
+			unregisterSlot = noop,
+			registerSlot = noop,
+		} = this.context;
+
 		if ( this.props.name !== name ) {
-			this.context.unregisterSlot( this.props.name );
-			this.context.registerSlot( name, this.node );
+			unregisterSlot( this.props.name );
+			registerSlot( name, this.node );
 		}
 	}
 
 	registerSlot( node ) {
+		const { registerSlot = noop } = this.context;
+
 		this.node = node;
-		this.context.registerSlot( this.props.name, node );
+		registerSlot( this.props.name, node );
 	}
 
 	render() {
